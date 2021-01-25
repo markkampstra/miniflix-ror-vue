@@ -23,6 +23,8 @@ services:
     volumes:
       - ./frontend:/app
     command: /bin/sh -c "yarn serve"
+    depends_on:
+      - backend
 
   db:
     image: postgres
