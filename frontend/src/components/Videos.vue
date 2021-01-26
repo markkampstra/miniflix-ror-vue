@@ -17,7 +17,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:3000/videos')
+    axios.get(this.backend_api_root_url + 'videos')
     .then(response => {
       this.videos = response.data
     })
