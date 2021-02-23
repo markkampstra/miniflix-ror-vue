@@ -14,8 +14,21 @@ on:
     branches: [ actions-workflow ]
 
 jobs:
-  test:
+  test-docker:
+    runs-on: ubuntu-latest
+    container:
+      ghcr.io/markkampstra/miniflix_backend:1.0
+    credentials:
+      username: ${{ github.actor }}
+      password: ${{ secrets.GHCR_TOKEN }}
+  steps:
+  - uses: actions/checkout@v2
+  - name: test-docker ls
+    run: ls -l /github/workspace/
+  - name: test-docker uname -a
+    run: uname -a
 
+  test:
     runs-on: ubuntu-latest
     env:
       working-directory: ./backend
@@ -38,6 +51,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Uname -a
+      run: uname -a
     - name: Set up Ruby
     # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
     # change this to (see https://github.com/ruby/setup-ruby#versioning):
