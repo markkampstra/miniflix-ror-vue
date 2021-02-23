@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         ruby-version: ['3.0']
-        
+
     services:
       postgres:
         image: postgres:10.8
@@ -54,7 +54,8 @@ jobs:
         DB_PASSWORD: password
         DB_PORT: ${{ job.services.postgres.ports[5432] }}
         RAILS_ENV: test
-      run: bundle exec rails db:create      
+      run: bundle exec rails db:create
+      working-directory: ${{env.working-directory}}
     - name: Run tests
       env:
         DB_HOST: localhost
