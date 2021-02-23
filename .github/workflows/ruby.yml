@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       ghcr.io/markkampstra/miniflix_backend:1.0
-    credentials:
-      username: ${{ github.actor }}
-      password: ${{ secrets.GHCR_TOKEN }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - name: test-docker ls
