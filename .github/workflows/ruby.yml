@@ -17,9 +17,11 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./backend
     strategy:
       matrix:
-        ruby-version: ['2.6', '2.7', '3.0']
+        ruby-version: ['3.0']
 
     steps:
     - uses: actions/checkout@v2
