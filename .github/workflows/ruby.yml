@@ -29,6 +29,13 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_TOKEN }}
 
+    env:
+      DB_HOST: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      DB_PORT: ${{ job.services.postgres.ports[5432] }}
+      RAILS_ENV: test
+
     services:
       postgres:
         image: postgres:13.2
