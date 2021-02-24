@@ -59,7 +59,7 @@ jobs:
       working-directory: ${{env.working-directory}}
     - name: Setup DB for tests
       env:
-        DB_HOST: localhost
+        DB_HOST: postgres
         DB_USERNAME: postgres
         DB_PASSWORD: password
         DB_PORT: ${{ job.services.postgres.ports[5432] }}
@@ -68,7 +68,7 @@ jobs:
       working-directory: ${{env.working-directory}}
     - name: Run tests
       env:
-        DB_HOST: localhost
+        DB_HOST: postgres
         DB_USERNAME: postgres
         DB_PASSWORD: password
         DB_PORT: ${{ job.services.postgres.ports[5432] }}
