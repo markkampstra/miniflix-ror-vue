@@ -24,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: test-docker ls
-      run: ls -l /github/workspace/
+      run: ls -l /
     - name: test-docker uname -a
       run: uname -a
 
