@@ -54,6 +54,9 @@ jobs:
     - name: Check working-directory
       run: pwd
       working-directory: ${{env.working-directory}}
+    - name: Setup bundle
+      run: bundle install
+      working-directory: ${{env.working-directory}}
     - name: Setup DB for tests
       env:
         DB_HOST: localhost
