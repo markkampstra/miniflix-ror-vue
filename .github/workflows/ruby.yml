@@ -25,12 +25,14 @@ jobs:
     - uses: actions/checkout@v2
     - name: test-docker ls /app
       run: ls -l /app
-    - name: test-docker ls /github
-      run: ls -l /github
+    - name: test-docker ls /github/workflow
+      run: ls -l /github/workflow
     - name: test-docker cat /etc/os-release
       run: cat /etc/os-release
     - name: test-docker uname -a
       run: uname -a
+    - name: apk --help
+      run: apk --help
 
   test:
     runs-on: ubuntu-latest
