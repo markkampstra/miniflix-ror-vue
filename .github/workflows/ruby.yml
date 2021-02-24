@@ -13,6 +13,10 @@ on:
   pull_request:
     branches: [ actions-workflow ]
 
+defaults:
+  run:
+    working-directory: ./backend
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -21,8 +25,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_TOKEN }}
-    env:
-      working-directory: ./backend
     strategy:
       matrix:
         ruby-version: ['3.0']
@@ -42,21 +44,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    # - name: Set up Ruby
-    # # # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-    # # # change this to (see https://github.com/ruby/setup-ruby#versioning):
-    # # # uses: ruby/setup-ruby@v1
-    #   uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
-    #   with:
-    #     ruby-version: ${{ matrix.ruby-version }}
-    #     bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    #     working-directory: ${{env.working-directory}}
     - name: Check working-directory
       run: pwd
       working-directory: ${{env.working-directory}}
     - name: Setup bundle
       run: bundle install
-      working-directory: ${{env.working-directory}}
     - name: Setup DB for tests
       env:
         DB_HOST: postgres
@@ -65,7 +57,6 @@ jobs:
         DB_PORT: ${{ job.services.postgres.ports[5432] }}
         RAILS_ENV: test
       run: bundle exec rails db:create
-      working-directory: ${{env.working-directory}}
     - name: Run tests
       env:
         DB_HOST: postgres
@@ -73,4 +64,3 @@ jobs:
         DB_PASSWORD: password
         DB_PORT: ${{ job.services.postgres.ports[5432] }}
       run: bundle exec rspec
-      working-directory: ${{env.working-directory}}
