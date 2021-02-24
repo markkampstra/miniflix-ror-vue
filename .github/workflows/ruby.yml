@@ -16,11 +16,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/markkampstra/miniflix_backend:1.0
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GHCR_TOKEN }}
+    # container:
+    #   image: ghcr.io/markkampstra/miniflix_backend:1.0
+    #   credentials:
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.GHCR_TOKEN }}
     env:
       working-directory: ./backend
     strategy:
