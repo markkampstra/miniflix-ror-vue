@@ -57,6 +57,10 @@ jobs:
     - name: Setup bundle
       run: bundle install
       working-directory: ${{env.working-directory}}
+      uses: docker://ghcr.io/markkampstra/miniflix_backend:1.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
     - name: Setup DB for tests
       env:
         DB_HOST: localhost
