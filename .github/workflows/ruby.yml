@@ -79,11 +79,6 @@ jobs:
       continue-on-error: true
       run : |
         ./bin/ci
-
-    - name: Run tests
-      env:
-        DB_HOST: postgres
-        DB_USERNAME: postgres
-        DB_PASSWORD: password
-        DB_PORT: ${{ job.services.postgres.ports[5432] }}
-      run: bundle exec rspec
+    - name: Notify failure if rspec test fail, workaround for continue-on-error
+      if: steps.rspec-test.outcome != 'success'
+      run: exit 1
