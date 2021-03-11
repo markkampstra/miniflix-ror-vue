@@ -2,9 +2,9 @@ name: Self hosted runner test
 
 on:
   push:
-    branches: [ docker ]
+    branches: [ actions-workflow ]
   pull_request:
-    branches: [ docker ]
+    branches: [ actions-workflow ]
 
 env:
   BUNDLE_PATH: ./vendor/bundle
