@@ -12,6 +12,10 @@ env:
   BUNDLE_RETRY: 3
   ImageOS: ubuntu18
 
+defaults:
+  run:
+    working-directory: ./backend
+
 jobs:
   run-ci:
     runs-on: [self-hosted]
