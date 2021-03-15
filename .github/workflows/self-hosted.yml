@@ -1,0 +1,31 @@
+name: Self hosted runner test
+
+on:
+  push:
+    branches: [ actions-workflow ]
+  pull_request:
+    branches: [ actions-workflow ]
+
+env:
+  BUNDLE_PATH: ./vendor/bundle
+  BUNDLE_JOBS: 2
+  BUNDLE_RETRY: 3
+  ImageOS: ubuntu18
+
+defaults:
+  run:
+    working-directory: ./backend
+
+jobs:
+  run-ci:
+    runs-on: [self-hosted]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0.0'
+          bundler-cache: true
+          working-directory: ./backend

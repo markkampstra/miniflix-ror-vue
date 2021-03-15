@@ -1,0 +1,85 @@
+name: MiniFlix CI
+
+on:
+  push:
+    branches: [ actions-workflow ]
+  pull_request:
+    branches: [ actions-workflow ]
+
+defaults:
+  run:
+    working-directory: ./backend
+
+jobs:
+  test:
+    # runs-on: ubuntu-latest
+    runs-on: [self-hosted]
+    strategy:
+      fail-fast: false
+      matrix:
+        # Set N number of parallel jobs you want to run tests on.
+        # Use higher number if you have slow tests to split them on more parallel jobs.
+        # Remember to update ci_node_index below to 0..N-1
+        ci_node_total: [1]
+        # set N-1 indexes for parallel jobs
+        # When you run 2 parallel jobs then first job will have index 0, the second job will have index 1 etc
+        ci_node_index: [0]
+    container:
+      image: ghcr.io/markkampstra/miniflix_backend:1.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    services:
+      postgres:
+        image: postgres:13.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: postgres
+        ports:
+        # will assign a random free host port
+        - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check working-directory
+      run: pwd
+      working-directory: ${{env.working-directory}}
+    - name: Setup bundle
+      run: bundle install
+      env:
+        BUNDLE_JOBS: 2
+        BUNDLE_RETRY: 3
+    - name: Setup DB for tests
+      env:
+        DB_HOST: postgres
+        DB_USERNAME: postgres
+        DB_PASSWORD: password
+        DB_PORT: ${{ job.services.postgres.ports[5432] }}
+        RAILS_ENV: test
+      run: bundle exec rails db:create
+
+    - name: Make bin/ci executable
+      run: chmod +x ./bin/ci
+    - name: Run Rspec test parallel
+      id: rspec-test
+      env:
+        # Specifies how many jobs you would like to run in parallel,
+        # used for partitioning
+        CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+        # Use the index from matrix as an environment variable
+        CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        DB_HOST: postgres
+        DB_USERNAME: postgres
+        DB_PASSWORD: password
+        DB_PORT: ${{ job.services.postgres.ports[5432] }}
+        RAILS_ENV: test
+      continue-on-error: true
+      run : |
+        ./bin/ci
+    - name: Notify failure if rspec test fail, workaround for continue-on-error
+      if: steps.rspec-test.outcome != 'success'
+      run: exit 1

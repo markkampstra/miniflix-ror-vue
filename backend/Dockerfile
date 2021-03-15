@@ -2,9 +2,9 @@ FROM ruby:3-alpine
 
 RUN apk --update add build-base postgresql-dev postgresql-client sqlite sqlite-dev tzdata
 WORKDIR /app
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
-RUN bundle install
+# COPY Gemfile /app/Gemfile
+# COPY Gemfile.lock /app/Gemfile.lock
+# RUN bundle install
 COPY . /app
 
 # Add a script to be executed every time the container starts.
