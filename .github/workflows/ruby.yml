@@ -24,36 +24,26 @@ jobs:
         # set N-1 indexes for parallel jobs
         # When you run 2 parallel jobs then first job will have index 0, the second job will have index 1 etc
         ci_node_index: [0]
-    # container:
-    #   image: ghcr.io/markkampstra/miniflix_backend:1.0
-    #   credentials:
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.GHCR_TOKEN }}
+    container:
+      image: ghcr.io/markkampstra/miniflix_backend:1.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
 
-    # services:
-    #   postgres:
-    #     image: postgres:13.2
-    #     env:
-    #       POSTGRES_USER: postgres
-    #       POSTGRES_PASSWORD: password
-    #       POSTGRES_DB: postgres
-    #     ports:
-    #     # will assign a random free host port
-    #     - 5432:5432
-    #     # needed because the postgres container does not provide a healthcheck
-    #     options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    services:
+      postgres:
+        image: postgres:13.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: postgres
+        ports:
+        # will assign a random free host port
+        - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - name: Check docker
-      run: |
-        docker -v
-    - name: Pull docker image
-      run: |
-        echo "$GHCR_TOKEN" > ./.ghcr_token.txt
-        cat ./.ghcr_token.txt | docker login ghcr.io --username markkampstra --password-stdin
-        docker pull ghcr.io/markkampstra/miniflix_backend:1.0
-      env:
-        GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
     - uses: actions/checkout@v2
     - name: Check working-directory
       run: pwd
@@ -68,7 +58,7 @@ jobs:
         DB_HOST: postgres
         DB_USERNAME: postgres
         DB_PASSWORD: password
-        # DB_PORT: ${{ job.services.postgres.ports[5432] }}
+        DB_PORT: ${{ job.services.postgres.ports[5432] }}
         RAILS_ENV: test
       run: bundle exec rails db:create
 
